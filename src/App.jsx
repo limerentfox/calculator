@@ -17,28 +17,34 @@ function App() {
     }
 
     if (value === "=") {
-      const evalResult = eval(input);
-      setDisplayValue(String(evalResult));
-      setInput(String(evalResult));
-      setJustClickedOperator(false);
+      try {
+        const evalResult = eval(input);
+        setDisplayValue(String(evalResult));
+        setInput(String(evalResult));
+        setJustClickedOperator(false);
+      } catch {
+        setDisplayValue("Error");
+      }
+      return;
     }
 
     if (operators.includes(value)) {
-      const newInput = input + value;
-      setInput(newInput);
+      if (!input || operators.includes(input.slice(-1))) return;
+      setInput(input + value);
       setJustClickedOperator(true);
-    } else {
-      const newInput = input + value;
-      setInput(newInput);
-
-      if (justClickedOperator) {
-        setDisplayValue(value);
-      } else {
-        setDisplayValue((prev) => prev + value);
-      }
-
-      setJustClickedOperator(false);
+      return;
     }
+
+    const newInput = input + value;
+    setInput(newInput);
+
+    if (justClickedOperator) {
+      setDisplayValue(value);
+    } else {
+      setDisplayValue(displayValue + value);
+    }
+
+    setJustClickedOperator(false);
   };
 
   const buttons = [
@@ -54,6 +60,10 @@ function App() {
     "5",
     "6",
     "-",
+    "3",
+    "2",
+    "1",
+    "+",
     "0",
     ".",
     "=",
